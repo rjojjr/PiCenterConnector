@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package picenter.connector.common.common.utilities;
+package picenter.connector.common.utilities;
 
 import java.util.Calendar;
 

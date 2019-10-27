@@ -4,6 +4,7 @@ plugins {
 
 group 'com.kirchnersolutions'
 version '1.0.00a'
+def build = '100101'
 
 sourceCompatibility = 1.8
 

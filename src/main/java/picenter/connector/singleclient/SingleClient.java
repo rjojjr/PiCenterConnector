@@ -1,5 +1,6 @@
 package picenter.connector.singleclient;
 
+import picenter.connector.common.debugging.Debugger;
 import picenter.connector.driver.*;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -19,6 +20,7 @@ public class SingleClient extends Client {
      * @param port
      * @param username
      * @param password
+     * @Depreciated
      */
     public SingleClient(String ip, String hostname, int port, String username, String password){
         this.ip = ip;
@@ -29,8 +31,23 @@ public class SingleClient extends Client {
     }
 
     /**
+     * Initiate single client connector
+     * @param ip
+     * @param hostname
+     * @param port
+     */
+    public SingleClient(String ip, String hostname, int port){
+        this.ip = ip;
+        this.port = port;
+        this.username = username;
+        this.password = password;
+        this.hostname = hostname;
+    }
+
+    /**
      * Logout
      * @throws Exception
+     * @Depreciated
      */
     public void logout() throws Exception{
         connection.stopThread();
@@ -41,6 +58,7 @@ public class SingleClient extends Client {
      * Start connection and logon.
      * @return
      * @throws Exception
+     * @Depreciated
      */
     public boolean logon() throws Exception{
         return connect();
@@ -156,13 +174,16 @@ public class SingleClient extends Client {
 
         public void run(){
             Thread.currentThread().setName(username + " Connection Thread");
+            Debugger.debug("Started connection Thread");
             running.set(true);
             while (run.get()){
                 if(command.get() && transaction != null){
                     try{
+                        Debugger.debug("Connection Thread: Sending Transaction");
                         processing.set(true);
                         results = sendMessage(transaction);
                         if(results == null){
+                            Debugger.debug("Connection Thread: Results = null");
                             connection = null;
                             connector = null;
                             results = new DatabaseResults();
@@ -173,11 +194,12 @@ public class SingleClient extends Client {
                             processing.set(false);
                             break;
                         }
+                        Debugger.debug("Connection Thread: Results = " + results.isSuccess() + " " + results.getMessage());
                         transaction = null;
                         command.set(false);
                         processing.set(false);
                     }catch (Exception e){
-                        e.printStackTrace();
+                        Debugger.debug("Connection Thread: Exception", e);
                         results = new DatabaseResults();
                         results.setSuccess(false);
                         results.setMessage(e.getMessage());
@@ -190,6 +212,7 @@ public class SingleClient extends Client {
                     results = new DatabaseResults();
                     results.setSuccess(false);
                     results.setMessage("No transaction set");
+                    Debugger.debug("Connection Thread: Results = " + results.isSuccess() + " " + results.getMessage());
                     transaction = null;
                     command.set(false);
                     processing.set(false);

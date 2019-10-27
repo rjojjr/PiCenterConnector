@@ -1,5 +1,7 @@
 package picenter.connector.driver;
 
+import picenter.connector.common.debugging.Debugger;
+
 import java.math.BigInteger;
 import java.util.Base64;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -16,12 +18,27 @@ public class Connector {
     private volatile AtomicBoolean loggedOn = new AtomicBoolean(false);
     private Keys keyManager;
 
-
+    /**
+     * @Depreciated
+     * @param ip
+     * @param hostname
+     * @param port
+     * @param username
+     * @param password
+     * @throws Exception
+     */
     protected Connector(String ip, String hostname, int port, String username, String password) throws Exception {
         this.ip = ip;
         this.port = port;
         this.username = username;
         this.password = new BigInteger(CryptTools.getSHA256(password));
+        this.hostname = hostname;
+        keyManager = new Keys();
+    }
+
+    protected Connector(String ip, String hostname, int port) throws Exception {
+        this.ip = ip;
+        this.port = port;
         this.hostname = hostname;
         keyManager = new Keys();
     }
@@ -89,6 +106,10 @@ public class Connector {
         return true;
     }
 
+    /**
+     * @Depreciated
+     * @throws Exception
+     */
     protected void logout() throws Exception {
         if(user != null){
             Transaction transaction = new Transaction();
@@ -106,21 +127,24 @@ public class Connector {
 
     protected DatabaseResults sendTransaction(Transaction transaction) throws Exception{
         if(isConnected()){
-            //transaction.setUsername(username);
+            Debugger.debug("Sent transaction");
             byte[] response = null;
             if((response = Base64.getDecoder().decode(keyManager.decryptAESResponse(sendMessage(Base64.getEncoder().encodeToString(keyManager.encryptAESRequest(databaseObjectFactory.databaseSerialFactory(transaction))))))) == null){
                 client.stopConnection();
                 client = null;
+                Debugger.debug("Response is null");
                 connect();
                 sendTransaction(transaction);
             }
             if(response.equals("closed") || response == null){
+                Debugger.debug("Response is closed");
                 client.stopConnection();
                 client = null;
                 connect();
                 sendTransaction(transaction);
             }
             try{
+                Debugger.debug("Response = " + new String(response, "UTF-8"));
                 return (DatabaseResults)databaseObjectFactory.databaseObjectFactory(response);
             }catch (Exception e){
                 if(logon()){

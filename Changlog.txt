@@ -1,0 +1,5 @@
+PiCenter Connector Changelog
+
+Build 100101
+10/27/2019
+    Added debugger.

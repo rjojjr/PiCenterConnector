@@ -4,7 +4,7 @@ import picenter.connector.common.utilities.CalenderConverter;
 
 public class Debugger {
 
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
     public static void debug(String log){
         if(DEBUG){

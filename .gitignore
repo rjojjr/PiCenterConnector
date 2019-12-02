@@ -1,0 +1,12 @@
+
+.gitignore
+build
+.gradle/5.2.1/javaCompile/classAnalysis.bin
+.gradle/5.2.1/vcsMetadata-1/
+build/classes/java/main/picenter/connector/common/debugging/
+build/classes/java/main/picenter/connector/common/utilities/
+build/generated/
+build/tmp/compileJava/
+.gradle
+.idea
+

@@ -56,27 +56,7 @@ public class Connector {
                         if(!keyManager.decryptAESKey(Base64.getDecoder().decode(key))){
                             throw new Exception("Failed to complete handshake.");
                         }
-                    }/*
-                    try {
-
-                        if(this.logon()){
-                            //System.out.println("logged on");
-
-                            loggedOn.set(true);
-                            return true;
-                        }else {
-                            //System.out.println("not");
-                            loggedOn.set(false);
-                            return false;
-                        }
-
-                    } catch (Exception e) {
-                        //System.out.println("Here");
-                        //e.printStackTrace();
-                        loggedOn.set(false);
-                        throw e;
                     }
-                    */
                 }catch (Exception e){
                     System.err.println(e.getMessage());
                     e.printStackTrace();

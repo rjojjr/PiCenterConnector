@@ -1,5 +1,7 @@
 package picenter.connector.driver;
 
+import picenter.connector.common.debugging.Debugger;
+
 import java.net.*;
 import java.io.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -56,7 +58,7 @@ class ServerClient {
                 out.println(msg);
                 out.flush();
                 String resp = in.readLine();
-
+                Debugger.debug("Received response: " + resp);
                 if(resp.contains("-close")){
                     stopConnection();
                     connected.set(false);
